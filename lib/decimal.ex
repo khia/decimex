@@ -6,7 +6,9 @@
 #
 #  0. You just DO WHAT THE FUCK YOU WANT TO.
 
-defrecord Decimal, internal: :decimal_conv.number(0) do
+defmodule Decimal do
+  defstruct internal: :decimal_conv.number(0)
+
   @moduledoc """
   This module implements a decimal representation and various operations on
   those values.
@@ -20,7 +22,6 @@ defrecord Decimal, internal: :decimal_conv.number(0) do
   """
 
   @type i :: { integer, integer, integer } | { integer, atom }
-  @type t :: Decimal[internal: i]
   @type c :: [{ :precision, integer } | { :rounding, atom }]
   @type v :: t | i | number | binary | char_list
 
@@ -28,15 +29,8 @@ defrecord Decimal, internal: :decimal_conv.number(0) do
   Convert a value to a decimal.
   """
   @spec from(v) :: t
-  def from(value) when is_tuple value do
-    case value do
-      { Decimal, _ } -> value
-      _              -> { Decimal, value }
-    end
-  end
-
   def from(value) do
-    { Decimal, :decimal_conv.number(value) }
+    { Decimal, struct(Decimal, internal: :decimal_conv.number(value)) }
   end
 
   @doc """
@@ -378,8 +372,8 @@ defrecord Decimal, internal: :decimal_conv.number(0) do
 end
 
 defimpl String.Chars, for: Decimal do
-  def to_string(decimal) do
-    Kernel.to_string(:decimal.format(decimal.internal))
+  def to_string(%Decimal{internal: decimal}) do
+    Kernel.to_string(:decimal.format(decimal))
   end
 end
 
@@ -402,11 +396,17 @@ end
 
 defimpl Decimal.Conversion, for: Tuple do
   def to_decimal(value) do
-    { Decimal, value }
+    Decimal.from(value)
   end
 end
 
-defimpl Decimal.Conversion, for: Number do
+defimpl Decimal.Conversion, for: Integer do
+  def to_decimal(value) do
+    Decimal.from(value)
+  end
+end
+
+defimpl Decimal.Conversion, for: Float do
   def to_decimal(value) do
     Decimal.from(value)
   end
