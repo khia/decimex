@@ -31,7 +31,7 @@ defmodule Decimal do
   """
   @spec from(v) :: t
   def from(value) do
-    { Decimal, struct(Decimal, internal: :decimal_conv.number(value)) }
+    { __MODULE__, struct(__MODULE__, internal: :decimal_conv.number(value)) }
   end
 
   @doc """
@@ -385,6 +385,9 @@ defimpl List.Chars, for: Decimal do
 end
 
 defimpl Inspect, for: Decimal do
+  def inspect(%Decimal{internal: decimal}, _) do
+    to_string(decimal)
+  end
   def inspect(decimal, _) do
     to_string(decimal)
   end
