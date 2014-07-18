@@ -30,6 +30,8 @@ defmodule Decimal do
   Convert a value to a decimal.
   """
   @spec from(v) :: t
+  def from(%__MODULE__{} = decimal), do: { __MODULE__, decimal }
+  def from({__MODULE__, %__MODULE__{}} = decimal), do: decimal
   def from(value) do
     { __MODULE__, struct(__MODULE__, internal: :decimal_conv.number(value)) }
   end
