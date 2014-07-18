@@ -36,6 +36,8 @@ defmodule Decimal do
     { __MODULE__, struct(__MODULE__, internal: :decimal_conv.number(value)) }
   end
 
+  defp internal(%__MODULE__{internal: decimal}), do: decimal
+
   @doc """
   Check if the decimal is not a number.
   """
