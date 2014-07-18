@@ -37,6 +37,7 @@ defmodule Decimal do
   end
 
   def internal(%__MODULE__{internal: decimal}), do: decimal
+  def internal({__MODULE__, %__MODULE__{internal: decimal}}), do: decimal
 
   @doc """
   Check if the decimal is not a number.
