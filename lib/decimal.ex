@@ -383,8 +383,8 @@ defimpl String.Chars, for: Decimal do
 end
 
 defimpl List.Chars, for: Decimal do
-  def to_char_list(decimal) do
-    :decimal.format(decimal.internal)
+  def to_char_list(%Decimal{internal: decimal}) do
+    :decimal.format(decimal)
   end
 end
 
