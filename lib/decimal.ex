@@ -388,10 +388,7 @@ end
 
 defimpl Inspect, for: Decimal do
   def inspect(%Decimal{internal: decimal}, _) do
-    to_string(decimal)
-  end
-  def inspect(decimal, _) do
-    to_string(decimal)
+    to_string(:decimal.format(decimal))
   end
 end
 
